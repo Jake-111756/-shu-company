@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f1e3">
+  <meta name="description" content="黍的节气信箱：一个安静的田园角落，记下心情，收一封回信。">
+  <title>黍的节气信箱</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+
+    <!-- ===== 到期的节气信：只在当天打开或主动现在看时显示 ===== -->
+    <section class="letter-reveal" id="letterReveal" hidden aria-labelledby="letterRevealTitle">
+      <div class="letter-reveal__paper">
+        <div class="letter-reveal__head">
+          <p class="letter-reveal__label" id="letterRevealTitle">上次的你留了句话</p>
+          <button class="paper-close" id="letterRevealClose" type="button">收好</button>
+        </div>
+        <p class="letter-reveal__meta" id="letterRevealMeta"></p>
+        <p class="letter-reveal__text" id="letterRevealText"></p>
+        <p class="letter-reveal__reply" id="letterRevealReply"></p>
+      </div>
+    </section>
+
+    <!-- ===== 顶部：日期、节气、黍的头像与关心台词 ===== -->
+    <header class="hero">
+      <p class="hero__brand">
+        <svg class="hero__brand-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path class="brand-icon__stem" d="M12 22V8" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          <path class="brand-icon__grain" d="M12 12c-3 0-4-2-4-4 3 0 4 2 4 4Z"/>
+          <path class="brand-icon__grain" d="M12 12c3 0 4-2 4-4-3 0-4 2-4 4Z"/>
+          <path class="brand-icon__grain-light" d="M12 17c-3 0-4-2-4-4 3 0 4 2 4 4Z"/>
+          <path class="brand-icon__grain-light" d="M12 17c3 0 4-2 4-4-3 0-4 2-4 4Z"/>
+        </svg>
+        黍的节气信箱
+      </p>
+      <p class="hero__date" id="dateLabel">正在翻开黄历…</p>
+      <p class="hero__term" id="termLabel">—</p>
+
+      <div class="hero__body">
+        <button class="avatar" id="avatarButton" type="button" aria-label="点一点黍的头像，听一句闲话">
+          <img class="avatar__art" src="assets/shu-avatar.jpg" alt="" width="104" height="104">
+        </button>
+
+        <div class="speech">
+          <p class="speech__meta" id="speechMeta">黍 · 问候</p>
+          <p class="speech__text" id="speechText" aria-live="polite">……</p>
+          <p class="speech__streak" id="streakLabel" hidden></p>
+          <p class="speech__family" id="speechFamily" hidden></p>
+        </div>
+      </div>
+
+      <aside class="desk-note" aria-labelledby="noteTitle">
+        <p class="desk-note__label" id="noteTitle">黍的便签</p>
+        <p class="desk-note__text" id="noteText">……</p>
+        <div class="desk-note__foot">
+          <button class="note-btn" id="firewoodButton" type="button">添一根柴</button>
+        </div>
+      </aside>
+    </header>
+
+    <main>
+      <!-- ===== 月度小结：当月首次打开且已有记录时出现一次 ===== -->
+      <section class="monthly-card" id="monthlyCard" hidden aria-labelledby="monthlyTitle">
+        <div class="monthly-card__paper">
+          <div class="monthly-card__head">
+            <p class="monthly-card__label" id="monthlyTitle">月度小结</p>
+            <button class="paper-close" id="monthlyClose" type="button">收好</button>
+          </div>
+          <p class="monthly-card__stat" id="monthlyStat"></p>
+          <p class="monthly-card__line" id="monthlyLine"></p>
+          <p class="monthly-card__foot">这个月的田垄</p>
+        </div>
+      </section>
+
+      <!-- ===== 中部：心情与回信 ===== -->
+      <section class="panel" aria-labelledby="letterTitle">
+        <h2 id="letterTitle">把心情放进信箱</h2>
+        <p class="hint">选一个此刻的心情，想说的话可以写在下面。黍会挑一句回给你。</p>
+
+        <div class="moods" id="moodChips" role="group" aria-label="选择此刻的心情"></div>
+
+        <label class="field" for="noteInput">
+          <span class="field__label">
+            <span>想对黍说的一句话（可不写）</span>
+            <span class="field__count" id="charCount">剩余 100 字</span>
+          </span>
+          <textarea id="noteInput" name="note" maxlength="100" rows="3"
+            placeholder="比如：今天把田埂上的草都拔完了，手有点酸。"></textarea>
+        </label>
+
+        <div class="actions">
+          <button class="btn btn--primary" id="submitButton" type="button">寄出这封信</button>
+        </div>
+        <p class="status" id="formStatus" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="panel panel--reply" id="replyPanel" aria-labelledby="replyTitle" hidden>
+        <h2 id="replyTitle">黍的回信</h2>
+        <p class="reply__meta" id="replyMeta"></p>
+        <p class="reply__text" id="replyText" aria-live="polite"></p>
+        <p class="reply__streak" id="replyStreak" hidden></p>
+        <p class="reply__family" id="replyFamily" hidden></p>
+        <p class="reply__memory" id="replyMemory" hidden></p>
+      </section>
+
+      <!-- ===== 下部：今日小卡 ===== -->
+      <section class="panel" aria-labelledby="cardTitle">
+        <h2 id="cardTitle">今日小卡</h2>
+        <p class="hint">把小卡生成出来，长按或截图就可以收进相册，也可以发给惦记的人。</p>
+        <div class="actions actions--start">
+          <button class="btn btn--ghost" id="cardButton" type="button">生成今日小卡</button>
+        </div>
+
+        <div class="card-wrap" id="cardWrap" hidden>
+          <article class="card" id="todayCard" aria-label="今日小卡">
+            <div class="card__inner">
+              <p class="card__term" id="cardTerm"></p>
+              <p class="card__date" id="cardDate"></p>
+              <div class="card__rule" aria-hidden="true"></div>
+
+              <p class="card__label">博士今天写道</p>
+              <p class="card__note" id="cardNote"></p>
+
+              <p class="card__label">黍说</p>
+              <p class="card__reply" id="cardReply"></p>
+
+              <div class="card__seal" aria-hidden="true">黍</div>
+              <p class="card__foot">黍的节气信箱</p>
+            </div>
+          </article>
+          <p class="hint hint--center">小卡只在这台设备上生成，不会上传到任何地方。</p>
+        </div>
+      </section>
+
+      <!-- ===== 给下一个节气的信 ===== -->
+      <section class="panel letter-panel" aria-labelledby="nextLetterTitle">
+        <h2 id="nextLetterTitle">给下一个节气的自己写句话</h2>
+        <p class="hint">写一句留给未来的话，选一个节气。到那天再打开看。</p>
+
+        <label class="field" for="nextLetterInput">
+          <span class="field__label">
+            <span>想对那时的自己说什么</span>
+            <span class="field__count" id="letterCount">剩余 80 字</span>
+          </span>
+          <textarea id="nextLetterInput" name="nextLetter" maxlength="80" rows="2"
+            placeholder="比如：到那天，记得给自己煮一碗热的。"></textarea>
+        </label>
+
+        <div class="letter-actions">
+          <label class="letter-term" for="letterTermSelect">
+            <span>寄往</span>
+            <select id="letterTermSelect"></select>
+          </label>
+          <button class="btn btn--ghost" id="letterSaveButton" type="button">收好这封信</button>
+        </div>
+        <p class="status letter-status" id="letterStatus" role="status" aria-live="polite"></p>
+        <p class="letter-pending" id="letterPending" hidden></p>
+        <p class="letter-missed" id="letterMissed" hidden>
+          <span>那封信还在，要现在看吗</span>
+          <button class="letter-missed__btn" id="letterReadButton" type="button">现在看</button>
+        </p>
+      </section>
+
+      <!-- ===== 下部：田垄日记 ===== -->
+      <section class="panel" aria-labelledby="diaryTitle">
+        <div class="panel__head">
+          <h2 id="diaryTitle">田垄日记</h2>
+          <div class="diary-actions">
+            <button class="btn btn--quiet" id="exportButton" type="button">导出日记</button>
+            <button class="btn btn--quiet" id="importButton" type="button">导入日记</button>
+            <button class="btn btn--danger" id="clearButton" type="button">清空日记</button>
+          </div>
+        </div>
+        <input type="file" id="importFileInput" accept=".json,application/json" hidden>
+        <p class="hint" id="diaryHint"></p>
+        <ol class="diary" id="diaryList"></ol>
+        <p class="empty" id="diaryEmpty">田垄还空着，今天想写点什么吗？</p>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>所有心情与回信，只保存在这台设备的浏览器里。</p>
+      <p class="foot__small">黍的节气信箱 · 第一版</p>
+      <p class="foot__boundary">黍会记得你写下的心情，但不会替你做决定。</p>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <p class="noscript">这个信箱需要 JavaScript 才能打开。请在浏览器设置里允许脚本后刷新页面。</p>
+  </noscript>
+
+  <script src="data/dialogues.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
